@@ -18,10 +18,10 @@ Tài liệu này lưu trữ lộ trình phát triển chi tiết của dự án,
 
 ### 📌 BƯỚC 1: Dựng khung API chuẩn & CRUD Dịch vụ Spa (Services & Categories)
 *Mục tiêu: Đảm bảo luồng xử lý dữ liệu Entity → Repository → Service → DTO → Controller hoạt động trơn tru.*
-- [ ] Dựng khung phản hồi chuẩn toàn cục (Global Response Wrapper: `ApiResponse`).
-- [ ] Xử lý ngoại lệ toàn cục (Global Exception Handling & `@ControllerAdvice`).
-- [ ] Viết CRUD cho **ServiceCategory** (Danh mục dịch vụ) và **Service** (Dịch vụ Spa).
-- [ ] Viết API test thử nghiệm để lễ tân/khách xem danh sách dịch vụ.
+- [x] Dựng khung phản hồi chuẩn toàn cục (Global Response Wrapper: `ApiResponse`).
+- [x] Xử lý ngoại lệ toàn cục (Global Exception Handling & `@ControllerAdvice`).
+- [x] Viết CRUD cho **ServiceCategory** (Danh mục dịch vụ) và **Service** (Dịch vụ Spa).
+- [x] Viết API test thử nghiệm để lễ tân/khách xem danh sách dịch vụ.
 
 ### 📌 BƯỚC 2: Bảo mật & Xác thực với JWT (Spring Security)
 *Mục tiêu: Thiết lập hệ thống phân quyền trước khi viết thêm nhiều API khác.*
