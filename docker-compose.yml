@@ -7,13 +7,14 @@ services:
     container_name: my_database
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: hoc_devops_db
+      MYSQL_DATABASE: spa_management
       MYSQL_USER: yen_user
       MYSQL_PASSWORD: yenpassword
     ports:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s
@@ -25,7 +26,7 @@ services:
     image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
     container_name: java_app_1
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/spa_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=yen_user
       - SPRING_DATASOURCE_PASSWORD=yenpassword
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
@@ -39,7 +40,7 @@ services:
     image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
     container_name: java_app_2
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/hoc_devops_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/spa_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=yen_user
       - SPRING_DATASOURCE_PASSWORD=yenpassword
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update 
