@@ -547,3 +547,6 @@ INSERT INTO payment_methods (code, name) VALUES
     ('BANK_TRANSFER', 'Chuyển khoản'),
     ('CARD', 'Thẻ ngân hàng'),
     ('EWALLET', 'Ví điện tử');
+
+INSERT INTO employees (role_id, employee_code, full_name, email, phone, password_hash, status) VALUES
+    (1, 'EMP001', 'Spa Administrator', 'admin@spa.com', '0987654321', '$2a$10$Nz6K97.q78Qn430Cq9Gxe.kKsnR7B2jLpWecR0FmU6d2Yp0/J.QNu', 'ACTIVE');

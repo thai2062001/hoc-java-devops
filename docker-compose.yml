@@ -23,7 +23,7 @@ services:
 
   # Hộp 2A: Java Sinh đôi số 1
   backend1:
-    image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
+    build: .
     container_name: java_app_1
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/spa_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
@@ -37,7 +37,7 @@ services:
 
   # Hộp 2B: Java Sinh đôi số 2 (Y hệt số 1)
   backend2:
-    image: ghcr.io/thailanhat7-del/hoc-java-devops:latest
+    build: .
     container_name: java_app_2
     environment:
       - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/spa_management?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
