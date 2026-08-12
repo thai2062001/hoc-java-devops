@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+
+    <!-- Định nghĩa thư mục lưu log và tên file -->
+    <property name="LOGS_DIR" value="./logs" />
+    <property name="LOG_FILE" value="${LOGS_DIR}/app.log" />
+
+    <!-- 1. Console Appender (Log ra màn hình CMD/Console) -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!-- Sử dụng định dạng có màu sắc mặc định của Spring Boot -->
+            <pattern>%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr(${PID:- }){magenta} %clr(---){faint} %clr([%15.15t]){faint} %clr(%-40.40logger{39}){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 2. Rolling File Appender (Ghi và tự động nén log cũ lưu trữ) -->
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:- } --- [%t] %-40.40logger{39} : %m%n%wEx</pattern>
+        </encoder>
+
+        <!-- Cấu hình lưu trữ và quay vòng log -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!-- Nén log cũ thành định dạng .gz khi sang ngày mới hoặc dung lượng file vượt quá ngưỡng -->
+            <fileNamePattern>${LOGS_DIR}/archived/app-%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <!-- Dung lượng tối đa của mỗi file log trước khi chia file nhỏ -->
+            <maxFileSize>10MB</maxFileSize>
+            <!-- Số ngày lưu log tối đa (ví dụ 30 ngày) -->
+            <maxHistory>30</maxHistory>
+            <!-- Tổng dung lượng lưu trữ log tối đa cho phép (ví dụ 2GB) -->
+            <totalSizeCap>2GB</totalSizeCap>
+        </rollingPolicy>
+    </appender>
+
+    <!-- Cấu hình log levels cho các package -->
+    <logger name="com.example.demodevops" level="DEBUG"/>
+    <logger name="org.springframework.web" level="INFO"/>
+    <logger name="org.hibernate.SQL" level="INFO"/>
+
+    <!-- Định nghĩa Root log appenders -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+        <appender-ref ref="FILE" />
+    </root>
+</configuration>
