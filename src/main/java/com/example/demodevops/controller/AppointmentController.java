@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,7 +62,7 @@ public class AppointmentController {
     @PostMapping("/book")
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
     public ResponseEntity<ApiResponse<AppointmentDto>> createBooking(
-            @RequestBody BookingRequestDto bookingRequestDto,
+            @Valid @RequestBody BookingRequestDto bookingRequestDto,
             @AuthenticationPrincipal EmployeePrincipal principal) {
         
         Long creatorId = principal != null ? principal.getEmployee().getId() : null;

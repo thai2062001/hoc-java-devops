@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,14 +39,14 @@ public class MembershipTierController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<MembershipTierDto>> createTier(@RequestBody MembershipTierDto tierDto) {
+    public ResponseEntity<ApiResponse<MembershipTierDto>> createTier(@Valid @RequestBody MembershipTierDto tierDto) {
         MembershipTierDto created = tierService.createTier(tierDto);
         return new ResponseEntity<>(ApiResponse.success(created, "Tier created successfully"), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<MembershipTierDto>> updateTier(@PathVariable Long id, @RequestBody MembershipTierDto tierDto) {
+    public ResponseEntity<ApiResponse<MembershipTierDto>> updateTier(@PathVariable Long id, @Valid @RequestBody MembershipTierDto tierDto) {
         MembershipTierDto updated = tierService.updateTier(id, tierDto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Tier updated successfully"));
     }

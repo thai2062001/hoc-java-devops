@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,14 +39,14 @@ public class ShiftController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<ShiftDto>> createShift(@RequestBody ShiftDto shiftDto) {
+    public ResponseEntity<ApiResponse<ShiftDto>> createShift(@Valid @RequestBody ShiftDto shiftDto) {
         ShiftDto created = shiftService.createShift(shiftDto);
         return new ResponseEntity<>(ApiResponse.success(created, "Shift created successfully"), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<ShiftDto>> updateShift(@PathVariable Long id, @RequestBody ShiftDto shiftDto) {
+    public ResponseEntity<ApiResponse<ShiftDto>> updateShift(@PathVariable Long id, @Valid @RequestBody ShiftDto shiftDto) {
         ShiftDto updated = shiftService.updateShift(id, shiftDto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Shift updated successfully"));
     }

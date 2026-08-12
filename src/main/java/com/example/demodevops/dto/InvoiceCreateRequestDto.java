@@ -1,11 +1,17 @@
 package com.example.demodevops.dto;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public class InvoiceCreateRequestDto {
+    @NotNull(message = "Appointment ID is required")
     private Long appointmentId;
     private Integer pointsUsed = 0;
     private String note;
+
+    @Valid
     private List<ProductPurchaseDto> productPurchases;
 
     public InvoiceCreateRequestDto() {}
@@ -23,7 +29,11 @@ public class InvoiceCreateRequestDto {
     public void setProductPurchases(List<ProductPurchaseDto> productPurchases) { this.productPurchases = productPurchases; }
 
     public static class ProductPurchaseDto {
+        @NotNull(message = "Product ID is required")
         private Long productId;
+
+        @NotNull(message = "Quantity is required")
+        @Min(value = 1, message = "Quantity must be at least 1")
         private Integer quantity;
 
         public ProductPurchaseDto() {}

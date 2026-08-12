@@ -2,15 +2,24 @@ package com.example.demodevops.dto;
 
 import com.example.demodevops.model.Appointment.AppointmentSource;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class BookingRequestDto {
+    @NotNull(message = "Customer ID is required")
     private Long customerId;
     private Long primaryEmployeeId;
+
+    @NotNull(message = "Start time is required")
     private LocalDateTime startTime;
     private AppointmentSource source = AppointmentSource.OFFLINE;
     private String note;
+
+    @NotEmpty(message = "At least one service must be selected")
+    @Valid
     private List<BookedServiceDto> services;
 
     public BookingRequestDto() {}
@@ -34,6 +43,7 @@ public class BookingRequestDto {
     public void setServices(List<BookedServiceDto> services) { this.services = services; }
 
     public static class BookedServiceDto {
+        @NotNull(message = "Service ID is required")
         private Long serviceId;
         private Long employeeId;
 

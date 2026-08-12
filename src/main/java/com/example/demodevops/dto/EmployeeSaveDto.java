@@ -3,15 +3,32 @@ package com.example.demodevops.dto;
 import com.example.demodevops.model.Employee.EmployeeStatus;
 import com.example.demodevops.model.Employee.Gender;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class EmployeeSaveDto {
+    @NotNull(message = "Role ID is required")
     private Long roleId;
+
+    @NotBlank(message = "Employee code is required")
     private String employeeCode;
+
+    @NotBlank(message = "Full name is required")
     private String fullName;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email is invalid")
     private String email;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]{10,11}$", message = "Phone number must be 10 to 11 digits")
     private String phone;
+
+    @NotBlank(message = "Password is required")
     private String password;
     private String avatarUrl;
     private Gender gender;

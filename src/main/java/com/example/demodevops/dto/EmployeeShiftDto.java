@@ -2,15 +2,22 @@ package com.example.demodevops.dto;
 
 import com.example.demodevops.model.EmployeeShift.ShiftStatus;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class EmployeeShiftDto {
     private Long id;
+
+    @NotNull(message = "Employee ID is required")
     private Long employeeId;
     private String employeeName;
+
+    @NotNull(message = "Shift ID is required")
     private Long shiftId;
     private String shiftName;
+
+    @NotNull(message = "Work date is required")
     private LocalDate workDate;
     private ShiftStatus status;
     private LocalDateTime checkInTime;

@@ -470,7 +470,7 @@ CREATE TABLE banners (
 
 CREATE TABLE social_accounts (
     id              BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    platform        ENUM('FACEBOOK','INSTAGRAM','TIKTOK') NOT NULL,
+    platform        ENUM('FACEBOOK','INSTAGRAM','TIKTOK','ZALO') NOT NULL,
     account_name    VARCHAR(150)    NOT NULL,
     external_page_id VARCHAR(150)   NOT NULL COMMENT 'Page ID / Account ID trên nền tảng',
     access_token    VARCHAR(1000)   NULL COMMENT 'Nên mã hóa trước khi lưu',

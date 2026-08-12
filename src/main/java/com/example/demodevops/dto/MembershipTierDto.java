@@ -1,13 +1,26 @@
 package com.example.demodevops.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class MembershipTierDto {
     private Long id;
+
+    @NotBlank(message = "Tier code is required")
     private String code;
+
+    @NotBlank(message = "Tier name is required")
     private String name;
+
+    @NotNull(message = "Minimum points are required")
+    @Min(value = 0, message = "Minimum points must be at least 0")
     private Integer minPoints;
+
+    @NotNull(message = "Discount percent is required")
+    @Min(value = 0, message = "Discount percent must be at least 0")
     private BigDecimal discountPercent;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

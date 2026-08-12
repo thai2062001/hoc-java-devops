@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -40,13 +41,13 @@ public class ServiceController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ServiceDto>> createService(@RequestBody ServiceDto serviceDto) {
+    public ResponseEntity<ApiResponse<ServiceDto>> createService(@Valid @RequestBody ServiceDto serviceDto) {
         ServiceDto created = serviceService.createService(serviceDto);
         return new ResponseEntity<>(ApiResponse.success(created, "Created service successfully"), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ServiceDto>> updateService(@PathVariable Long id, @RequestBody ServiceDto serviceDto) {
+    public ResponseEntity<ApiResponse<ServiceDto>> updateService(@PathVariable Long id, @Valid @RequestBody ServiceDto serviceDto) {
         ServiceDto updated = serviceService.updateService(id, serviceDto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Updated service successfully"));
     }

@@ -1,15 +1,20 @@
 package com.example.demodevops.dto;
 
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TreatmentHistoryDto {
     private Long id;
+
+    @NotNull(message = "Customer ID is required")
     private Long customerId;
     private String customerName;
     private Long appointmentServiceId;
     private Long employeeId;
     private String employeeName;
+
+    @NotNull(message = "Treatment date is required")
     private LocalDate treatmentDate;
     private String notes;
     private String beforeImageUrl;

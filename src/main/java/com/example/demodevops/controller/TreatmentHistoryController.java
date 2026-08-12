@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -38,7 +39,7 @@ public class TreatmentHistoryController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST', 'TECHNICIAN')")
-    public ResponseEntity<ApiResponse<TreatmentHistoryDto>> addHistoryRecord(@RequestBody TreatmentHistoryDto dto) {
+    public ResponseEntity<ApiResponse<TreatmentHistoryDto>> addHistoryRecord(@Valid @RequestBody TreatmentHistoryDto dto) {
         TreatmentHistoryDto created = historyService.addHistoryRecord(dto);
         return new ResponseEntity<>(ApiResponse.success(created, "Treatment record added successfully"), HttpStatus.CREATED);
     }
@@ -47,7 +48,7 @@ public class TreatmentHistoryController {
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST', 'TECHNICIAN')")
     public ResponseEntity<ApiResponse<TreatmentHistoryDto>> updateHistoryRecord(
             @PathVariable Long id, 
-            @RequestBody TreatmentHistoryDto dto) {
+            @Valid @RequestBody TreatmentHistoryDto dto) {
         TreatmentHistoryDto updated = historyService.updateHistoryRecord(id, dto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Treatment record updated successfully"));
     }

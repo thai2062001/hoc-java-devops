@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -34,13 +35,13 @@ public class ServiceCategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ServiceCategoryDto>> createCategory(@RequestBody ServiceCategoryDto categoryDto) {
+    public ResponseEntity<ApiResponse<ServiceCategoryDto>> createCategory(@Valid @RequestBody ServiceCategoryDto categoryDto) {
         ServiceCategoryDto created = categoryService.createCategory(categoryDto);
         return new ResponseEntity<>(ApiResponse.success(created, "Created category successfully"), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<ServiceCategoryDto>> updateCategory(@PathVariable Long id, @RequestBody ServiceCategoryDto categoryDto) {
+    public ResponseEntity<ApiResponse<ServiceCategoryDto>> updateCategory(@PathVariable Long id, @Valid @RequestBody ServiceCategoryDto categoryDto) {
         ServiceCategoryDto updated = categoryService.updateCategory(id, categoryDto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Updated category successfully"));
     }

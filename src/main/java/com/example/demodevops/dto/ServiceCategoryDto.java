@@ -1,9 +1,12 @@
 package com.example.demodevops.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 public class ServiceCategoryDto {
     private Long id;
+
+    @NotBlank(message = "Category name is required")
     private String name;
     private String description;
     private LocalDateTime createdAt;

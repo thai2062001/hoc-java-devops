@@ -89,4 +89,174 @@ public class WebhookServiceImpl implements WebhookService {
         conversation.setLastMessageAt(LocalDateTime.now());
         conversationRepository.save(conversation);
     }
+
+    @Override
+    public void processFacebookWebhook(Map<String, Object> payload) {
+        // =====================================================================
+        // SƯỜN KẾT NỐI FACEBOOK MESSENGER WEBHOOK
+        // =====================================================================
+        // Payload thực tế của FB gửi về thường có cấu trúc:
+        // {
+        //   "object": "page",
+        //   "entry": [
+        //     {
+        //       "id": "PAGE_ID",
+        //       "messaging": [
+        //         {
+        //           "sender": { "id": "USER_ID" },
+        //           "recipient": { "id": "PAGE_ID" },
+        //           "message": { "mid": "mid.123", "text": "Tin nhắn từ FB", "attachments": [...] }
+        //         }
+        //       ]
+        //     }
+        //   ]
+        // }
+        try {
+            if ("page".equals(payload.get("object")) && payload.containsKey("entry")) {
+                java.util.List<Map<String, Object>> entries = (java.util.List<Map<String, Object>>) payload.get("entry");
+                for (Map<String, Object> entry : entries) {
+                    String pageId = (String) entry.get("id");
+                    if (entry.containsKey("messaging")) {
+                        java.util.List<Map<String, Object>> messagings = (java.util.List<Map<String, Object>>) entry.get("messaging");
+                        for (Map<String, Object> messaging : messagings) {
+                            Map<String, Object> sender = (Map<String, Object>) messaging.get("sender");
+                            String senderId = sender != null ? (String) sender.get("id") : "unknown";
+
+                            Map<String, Object> messageMap = (Map<String, Object>) messaging.get("message");
+                            if (messageMap != null) {
+                                String text = (String) messageMap.get("text");
+                                String messageId = (String) messageMap.get("mid");
+                                String attachmentUrl = null;
+
+                                // Trích xuất ảnh/file đính kèm nếu có
+                                if (messageMap.containsKey("attachments")) {
+                                    java.util.List<Map<String, Object>> attachments = (java.util.List<Map<String, Object>>) messageMap.get("attachments");
+                                    if (!attachments.isEmpty()) {
+                                        Map<String, Object> payloadAttachment = (Map<String, Object>) attachments.get(0).get("payload");
+                                        if (payloadAttachment != null) {
+                                            attachmentUrl = (String) payloadAttachment.get("url");
+                                        }
+                                    }
+                                }
+
+                                // Bản ghi mapping lưu trữ thông tin
+                                Map<String, Object> parsedPayload = new java.util.HashMap<>();
+                                parsedPayload.put("platform", "FACEBOOK");
+                                parsedPayload.put("pageId", pageId);
+                                parsedPayload.put("senderId", senderId);
+                                parsedPayload.put("senderName", "Facebook User " + senderId);
+                                parsedPayload.put("messageId", messageId);
+                                parsedPayload.put("text", text);
+                                parsedPayload.put("attachmentUrl", attachmentUrl);
+
+                                // Gọi xử lý nghiệp vụ chung để lưu DB
+                                processSocialWebhook(parsedPayload);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Log lỗi parsing ở đây
+            System.err.println("Error parsing Facebook webhook: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void processZaloWebhook(Map<String, Object> payload) {
+        // =====================================================================
+        // SƯỜN KẾT NỐI ZALO OA WEBHOOK
+        // =====================================================================
+        // Payload thực tế của Zalo OA gửi về thường có cấu trúc:
+        // {
+        //   "oa_id": "OA_ID",
+        //   "event_name": "user_send_text",
+        //   "sender": { "id": "USER_ID" },
+        //   "message": { "text": "Tin nhắn từ Zalo", "msg_id": "zalo-msg-123" },
+        //   "timestamp": "169000000"
+        // }
+        try {
+            String eventName = (String) payload.get("event_name");
+            String oaId = (String) payload.get("oa_id");
+            Map<String, Object> sender = (Map<String, Object>) payload.get("sender");
+            String senderId = sender != null ? (String) sender.get("id") : null;
+
+            if (senderId != null && ("user_send_text".equals(eventName) || "user_send_image".equals(eventName))) {
+                Map<String, Object> messageMap = (Map<String, Object>) payload.get("message");
+                if (messageMap != null) {
+                    String text = (String) messageMap.get("text");
+                    String messageId = (String) messageMap.get("msg_id");
+                    String attachmentUrl = null;
+
+                    // Nếu gửi ảnh, trích xuất URL ảnh
+                    if (messageMap.containsKey("attachments")) {
+                        java.util.List<Map<String, Object>> attachments = (java.util.List<Map<String, Object>>) messageMap.get("attachments");
+                        if (!attachments.isEmpty()) {
+                            Map<String, Object> payloadAttachment = (Map<String, Object>) attachments.get(0).get("payload");
+                            if (payloadAttachment != null) {
+                                attachmentUrl = (String) payloadAttachment.get("url");
+                            }
+                        }
+                    }
+
+                    Map<String, Object> parsedPayload = new java.util.HashMap<>();
+                    parsedPayload.put("platform", "ZALO");
+                    parsedPayload.put("pageId", oaId);
+                    parsedPayload.put("senderId", senderId);
+                    parsedPayload.put("senderName", "Zalo User " + senderId);
+                    parsedPayload.put("messageId", messageId);
+                    parsedPayload.put("text", text != null ? text : "[Media/Attachment]");
+                    parsedPayload.put("attachmentUrl", attachmentUrl);
+
+                    processSocialWebhook(parsedPayload);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing Zalo webhook: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void processTikTokWebhook(Map<String, Object> payload) {
+        // =====================================================================
+        // SƯỜN KẾT NỐI TIKTOK SHOP/CHAT WEBHOOK
+        // =====================================================================
+        // Payload thực tế của TikTok Shop Webhook gửi về thường có cấu trúc:
+        // {
+        //   "event": "conversation.message.new",
+        //   "shop_id": "SHOP_ID",
+        //   "content": "{\"sender\":{\"id\":\"SENDER_ID\"},\"message_id\":\"msg-456\",\"text\":\"Tin nhắn TikTok\"}"
+        // }
+        try {
+            String event = (String) payload.get("event");
+            String shopId = (String) payload.get("shop_id");
+            
+            // TikTok thường gửi tin nhắn mới với event "conversation.message.new" hoặc tương đương
+            if (event != null && event.contains("message")) {
+                Map<String, Object> data = (Map<String, Object>) payload.get("data"); // Một số version để trong block 'data'
+                if (data == null) {
+                    data = payload;
+                }
+                
+                String senderId = (String) data.get("sender_id");
+                String text = (String) data.get("text");
+                String messageId = (String) data.get("message_id");
+
+                if (senderId != null) {
+                    Map<String, Object> parsedPayload = new java.util.HashMap<>();
+                    parsedPayload.put("platform", "TIKTOK");
+                    parsedPayload.put("pageId", shopId != null ? shopId : "default-tiktok-shop");
+                    parsedPayload.put("senderId", senderId);
+                    parsedPayload.put("senderName", "TikTok User " + senderId);
+                    parsedPayload.put("messageId", messageId != null ? messageId : "tt-msg-" + System.currentTimeMillis());
+                    parsedPayload.put("text", text);
+                    parsedPayload.put("attachmentUrl", null);
+
+                    processSocialWebhook(parsedPayload);
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error parsing TikTok webhook: " + e.getMessage());
+        }
+    }
 }

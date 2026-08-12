@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -39,14 +40,14 @@ public class EmployeeController {
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<EmployeeDto>> createEmployee(@RequestBody EmployeeSaveDto employeeSaveDto) {
+    public ResponseEntity<ApiResponse<EmployeeDto>> createEmployee(@Valid @RequestBody EmployeeSaveDto employeeSaveDto) {
         EmployeeDto created = employeeService.createEmployee(employeeSaveDto);
         return new ResponseEntity<>(ApiResponse.success(created, "Employee created successfully"), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<EmployeeDto>> updateEmployee(@PathVariable Long id, @RequestBody EmployeeSaveDto employeeSaveDto) {
+    public ResponseEntity<ApiResponse<EmployeeDto>> updateEmployee(@PathVariable Long id, @Valid @RequestBody EmployeeSaveDto employeeSaveDto) {
         EmployeeDto updated = employeeService.updateEmployee(id, employeeSaveDto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Employee updated successfully"));
     }

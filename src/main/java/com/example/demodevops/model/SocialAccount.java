@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 public class SocialAccount {
 
     public enum SocialPlatform {
-        FACEBOOK, INSTAGRAM, TIKTOK
+        FACEBOOK, INSTAGRAM, TIKTOK, ZALO
     }
 
     public enum ConnectionStatus {

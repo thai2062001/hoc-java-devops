@@ -1,15 +1,28 @@
 package com.example.demodevops.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class ServiceDto {
     private Long id;
+
+    @NotNull(message = "Category ID is required")
     private Long categoryId;
     private String categoryName;
+
+    @NotBlank(message = "Service name is required")
     private String name;
     private String description;
+
+    @NotNull(message = "Price is required")
+    @Min(value = 0, message = "Price must be greater than or equal to 0")
     private BigDecimal price;
+
+    @NotNull(message = "Duration is required")
+    @Min(value = 1, message = "Duration must be at least 1 minute")
     private Integer durationMinutes;
     private String imageUrl;
     private Boolean isActive;

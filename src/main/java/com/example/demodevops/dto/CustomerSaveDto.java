@@ -3,12 +3,23 @@ package com.example.demodevops.dto;
 import com.example.demodevops.model.Customer.CustomerStatus;
 import com.example.demodevops.model.Customer.Gender;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 public class CustomerSaveDto {
+    @NotBlank(message = "Customer code is required")
     private String customerCode;
+
+    @NotBlank(message = "Full name is required")
     private String fullName;
+
+    @NotBlank(message = "Phone number is required")
+    @Pattern(regexp = "^[0-9]{10,11}$", message = "Phone number must be 10 to 11 digits")
     private String phone;
+
+    @Email(message = "Email is invalid")
     private String email;
     private LocalDate dob;
     private Gender gender;

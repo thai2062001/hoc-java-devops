@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -46,14 +47,14 @@ public class CustomerController {
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
-    public ResponseEntity<ApiResponse<CustomerDto>> createCustomer(@RequestBody CustomerSaveDto customerSaveDto) {
+    public ResponseEntity<ApiResponse<CustomerDto>> createCustomer(@Valid @RequestBody CustomerSaveDto customerSaveDto) {
         CustomerDto created = customerService.createCustomer(customerSaveDto);
         return new ResponseEntity<>(ApiResponse.success(created, "Customer created successfully"), HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
-    public ResponseEntity<ApiResponse<CustomerDto>> updateCustomer(@PathVariable Long id, @RequestBody CustomerSaveDto customerSaveDto) {
+    public ResponseEntity<ApiResponse<CustomerDto>> updateCustomer(@PathVariable Long id, @Valid @RequestBody CustomerSaveDto customerSaveDto) {
         CustomerDto updated = customerService.updateCustomer(id, customerSaveDto);
         return ResponseEntity.ok(ApiResponse.success(updated, "Customer details updated successfully"));
     }

@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -43,7 +44,7 @@ public class EmployeeShiftController {
 
     @PostMapping("/assign")
     @PreAuthorize("hasAnyRole('ADMIN', 'RECEPTIONIST')")
-    public ResponseEntity<ApiResponse<EmployeeShiftDto>> assignShift(@RequestBody EmployeeShiftDto dto) {
+    public ResponseEntity<ApiResponse<EmployeeShiftDto>> assignShift(@Valid @RequestBody EmployeeShiftDto dto) {
         EmployeeShiftDto assigned = employeeShiftService.assignShift(dto);
         return ResponseEntity.ok(ApiResponse.success(assigned, "Assigned shift successfully"));
     }
