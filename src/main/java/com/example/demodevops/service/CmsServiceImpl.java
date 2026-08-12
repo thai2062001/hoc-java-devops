@@ -119,7 +119,7 @@ public class CmsServiceImpl implements CmsService {
     // --- BANNERS ---
     @Override
     public List<BannerDto> getActiveBanners() {
-        return bannerRepository.findByIsActiveTrueOrderBySortOrderAsc().stream()
+        return bannerRepository.findByIsActiveTrueOrderByDisplayOrderAsc().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }

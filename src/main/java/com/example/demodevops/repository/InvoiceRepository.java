@@ -11,5 +11,5 @@ import java.util.Optional;
 public interface InvoiceRepository extends JpaRepository<Invoice, Long> {
     List<Invoice> findByCustomerId(Long customerId);
     Optional<Invoice> findByAppointmentId(Long appointmentId);
-    Optional<Invoice> findByInvoiceNo(String invoiceNo);
+    Optional<Invoice> findByInvoiceCode(String invoiceCode);
 }
